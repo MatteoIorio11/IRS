@@ -29,8 +29,22 @@ end
 By doing this I am able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, It will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of light has been detected.
 
 ### Obstacle Avoidance
-In order to implement the obstacle avoidance, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the highest score (it means that I get the closest sensor to an object), then I also save the angle of this sensor. By using the angle, then the robot is able to avoid the obstacle, by going towards the opposite direction.
+In order to implement the *obstacle avoidance*, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the *highest score* (it means that I get the closest sensor to an object), then I also save the *angle* of this sensor. By using the *angle*, then the robot is able to avoid the obstacle, by going towards the *opposite* direction. The *sense* method of this logic checks if there is an obstacle to avoid, it returns *true* if there is an obstacle otherwise *false*, then inside the *callback* method there is the actual logic for avoiding the detected obstacle, in this way each of the task is indipendent from all the others.
 
 ### PhotoTaxi
 
+The phototaxi logic involved the use of the light sensors, more in particular I have grouped all the sensors into 4 different groups, where each one of the has exaclty 6 different sensors. 
+
+```lua
+DIRECTIONS = {
+	{ direction = direction_module.NORTH, sensors = { 3, 2, 1, 24, 23, 22 } },
+	{ direction = direction_module.EAST, sensors = { 21, 20, 19, 18, 17, 16 } },
+	{ direction = direction_module.SOUTH, sensors = { 15, 14, 13, 12, 11, 10 } },
+	{ direction = direction_module.WEST, sensors = { 9, 8, 7, 6, 5, 4 } },
+}
+```
+
+Then for each of the group the robot adds up all the sensor's values, then it will follow the direction that has the highest score. In this ways It is possible to reach for the light. The *sense* method of this logic checks if the robot detects some light in the arena, if it does then the *callback* method will apply the logic for moving the robot towards the direction with the highest score calculated in the *sense* method. It is important to say that this method and in particular the *sense* will be called only if the object detection task has not detect any object at all.
+
 ### Random Walk
+The random walk logic follows a simple idea, using the *robot.random.uniform* I generate two different values, that will be then set as the left and right velocity of the wheels.
