@@ -2,18 +2,8 @@ local random = {}
 
 local last_angle = 0
 
-function random.get_vector(robot, light_angle)
-    local angle = 0
-    log("ciao")
-    log(light_angle)
-    if not (light_angle == 0.0) or not (last_angle == 0.0) then
-        if not (light_angle == 0.0) then
-            last_angle = light_angle
-        end
-        angle = last_angle
-    else
-        angle = random.normalise(math.random(0, 360) * (math.pi / 180))
-    end
+function random.get_vector(robot)
+    local angle = random.normalise(math.random(0, 360) * (math.pi / 180))
     local vector = {angle=angle, length=math.random(0.0, 1.0)}
     return vector
 end
