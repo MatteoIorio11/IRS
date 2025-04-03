@@ -43,7 +43,6 @@ function detect_light_angle(robot)
 		local pair = DIRECTIONS[i]
 		local intensity, max_light = detect_light_intensity(robot, pair.sensors)
 		if intensity >= brightest_value then
-			log(pair.direction .. " valore: " .. intensity)
 			brightest_value = intensity
 			direction = pair.direction
 			max_local_value = max_light
