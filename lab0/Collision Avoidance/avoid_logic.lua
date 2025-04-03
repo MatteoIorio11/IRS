@@ -10,7 +10,6 @@ ANGLE = 0
 
 -- Sense all the proximity sensors, check if the robot should avoid an object.
 function avoid_module.sense(robot)
-	-- #NOTE: Before looking for the light, we first check if there are none objects around the robot. If so, then we can procede into searching for the light.
 	return avoid_object_step(robot) == direction_module.DETECTED
 end
 
