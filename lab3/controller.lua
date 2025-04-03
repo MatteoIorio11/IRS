@@ -11,8 +11,8 @@ function init() end
 function step()
 	local v1 = attractive.get_vector(robot)
 	local v2 = repulsive.get_vector(robot)
-	-- local v3 = random.get_vector(robot, v1.angle)
-	motor.move(robot, vector.vec2_polar_sum(v1, v2))
+	local v3 = random.get_vector(robot)
+	motor.move(robot, vector.vec2_polar_sum(v1, vector.vec2_polar_sum(v2, v3)))
 end
 
 function reset() end
