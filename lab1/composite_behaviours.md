@@ -27,3 +27,10 @@ function step()
 end
 ```
 By doing this I am able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, It will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of light has been detected.
+
+### Obstacle Avoidance
+In order to implement the obstacle avoidance, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the highest score (it means that I get the closest sensor to an object), then I also save the angle of this sensor. By using the angle, then the robot is able to avoid the obstacle, by going towards the opposite direction.
+
+### PhotoTaxi
+
+### Random Walk
