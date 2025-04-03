@@ -1,12 +1,7 @@
 local generalmodule = require("general")
 local moverandommodule = {}
 
--- #NOTE: logic for move the robot with random speeds.
-function moverandommodule.sense(robot)
-	return true
-end
-
-function moverandommodule.callback(robot)
+function moverandommodule.move(robot)
 	log("robot: Priority over move random task")
 	local left_v = robot.random.uniform(0, generalmodule.MAX_VELOCITY)
 	local right_v = robot.random.uniform(0, generalmodule.MAX_VELOCITY)
