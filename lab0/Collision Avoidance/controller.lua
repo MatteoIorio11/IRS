@@ -9,7 +9,7 @@ function step()
 	if avoid_logic.sense(robot) then
 		avoid_logic.callback(robot)
 	else
-		move_random_logic.callback(robot)
+		move_random_logic.move(robot)
 	end
 end
 
