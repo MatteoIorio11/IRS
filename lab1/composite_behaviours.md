@@ -1,5 +1,5 @@
 # Composite Behaviours
-The main goal of this task was to develop a robot's behaviour capable of avoiding all the obstacles that are present inside the arena and in the mean time reach the source of light. There are no requirements in what to do when the robot reaches the light and also what the robot has to do when there is no light at all.
+The main goal of this task was to develop a robot's behaviour capable of avoiding all the obstacles that are present inside the arena and in the mean time reach the source of light. There are no requirements in what the robot has to do when there is no light at all.
 
 ## Design
 The entire behaviour of this task, is divided into three different logics, then each logic is implemented inside a specific file, in order to have a better encapsulation:
@@ -13,11 +13,17 @@ Because this assesment has no specifics about what the robot has to do when the 
 1. *sense*: search in the environment around the robot and decided if it has to do something;
 2. *callback*: apply the main logic designed in the file (avoid the obstacle, go towards the light, random walk).
 
-Inisde the controller I have 
+Inisde the controller I have designed the logic using a cascade of ifs, where starting from the most important task, the *collision avoidance*, we go down towards the *random walk*. Here is how It is implemented:
 
-## Obstacle Avoidance
--- copiare
-## Phototaxi
--- copiare
-## Random Walking
--- copiare
+```lua
+function step()
+	if avoid_logic.sense(robot) then
+		avoid_logic.callback(robot)
+	elseif phototaxi.sense(robot) then
+		phototaxi.callback(robot)
+	else
+		move_random_logic.callback(robot)
+	end
+end
+```
+By doing this I am able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, It will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of light has been detected.
