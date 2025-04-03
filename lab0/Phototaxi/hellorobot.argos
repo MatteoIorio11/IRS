@@ -63,21 +63,6 @@
            intensity="1"
            medium="leds"/>
  
-    <distribute>
-      <position method="uniform" min="-2,-2,0" max="2,2,0" />
-      <orientation method="uniform" min="0,0,0" max="360,0,0" />
-      <entity quantity="5" max_trials="100">
-        <box id="o" size="0.2, 0.2, 0.2" movable="false" />
-      </entity>
-    </distribute>
-    
-    
-<!--     Place the robot in a given precise position -->
-<!--    <foot-bot id="fb">
-      <controller config="lua" />
-      <body position="0.2,0.3,0" orientation="0,0,0" />
-    </foot-bot>-->
-
 
 <!--     If you want to place the robot(s) in a random position you may want to use this piece of code -->
 <!-- 	The number of robots can be specificed by changing the field quantity in entity -->
