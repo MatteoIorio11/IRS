@@ -3,9 +3,7 @@ local repulsive = {}
 
 
 function repulsive.get_vector(robot)
-	log("Repulsive:")
 	local vector = ps.from_sensors(robot.proximity, 1, 0.1, repulsive.module_force)
-	-- local vector = ps.from_sensor_groups(robot.proximity, repulsive.module_force)
 	return {angle=invert_angle(vector.angle), length=vector.length}
 end
 
@@ -22,7 +20,6 @@ end
 
 
 function repulsive.module_force(distance)
-	log(distance)
 	if (distance >= 0.10) then
 		return 4 + distance
 	end
