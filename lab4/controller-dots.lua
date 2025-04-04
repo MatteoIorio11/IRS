@@ -3,6 +3,7 @@ local signal = require("signal")
 local probability = require("probability")
 local walk = require("random_walk")
 local states = require("states")
+local color = require("colors")
 
 local currrent_state = states.WALKING
 
@@ -37,14 +38,14 @@ end
 function handle_stop()
     currrent_state = 1
     signal.stop_moving(robot)
-    robot.leds.set_all_colors("green")
+    color.go_green(robot)
     robot.wheels.set_velocity(0, 0)
 end
 
 function handle_walk()
     currrent_state = 2
     signal.start_moving(robot)
-    robot.leds.set_all_colors("black")
+    color.go_black(robot)
 end
 
 function reset() end
