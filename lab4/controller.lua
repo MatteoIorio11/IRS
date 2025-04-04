@@ -5,38 +5,33 @@ local walk = require("random_walk")
 local states = require("states")
 
 local currrent_state = states.WALKING
-local TOTAL_ROBOTS = 30
-local TICK = 1
-local current = 0
 
 function init() end
 
 --[[ This function is executed at each time step
      It must contain the logic of your controller ]]
 function step()
-    if current % TICK == 0 then
-        if currrent_state == states.STOPPED then
-            local total_stopped = signal.count_stopped(robot)
-            local should_walk = probability.should_walk(0.01, 0.1, total_stopped)
-            if should_walk then
-                handle_walk()
-            end
-        elseif currrent_state == states.WALKING then
-            local total_stopped = signal.count_stopped(robot)
-            local should_stop = probability.should_stop(0.1, 0.05, total_stopped)
-            if should_stop then
-                handle_stop()
-            else
-                if avoid_logic.sense(robot) then
-                    avoid_logic.callback(robot)
-                else
-                    walk.move(robot)
-                end
-            end
+    if currrent_state == states.STOPPED then
+        local should_walk = probability.should_walk_with_spot(robot, 0.01, 0.1)
+        if should_walk then
+            handle_walk()
         end
-        current = 0
+    elseif currrent_state == states.WALKING then
+        local should_stop = probability.should_stop_with_spot(robot, 0.1, 0.05)
+        if should_stop then
+            handle_stop()
+        else
+            walking()
+        end
     end
-    current = current + 1
+end
+
+function walking()
+    if avoid_logic.sense(robot) then
+        avoid_logic.callback(robot)
+    else
+        walk.move(robot)
+    end
 end
 
 function handle_stop()
