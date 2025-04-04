@@ -3,6 +3,7 @@
 
 local direction_module = require("directions")
 local general_module = require("general")
+local colors = require("colors")
 
 local avoid_module = {}
 OBJECT_THRESHOLD = 0.15
@@ -16,7 +17,7 @@ end
 
 -- Callback of the module, It means that the robot previously has detected an object and It needs to avoid it.
 function avoid_module.callback(robot)
-	robot.leds.set_all_colors("red")
+	colors.go_red(robot)
 	avoid_object(robot, ANGLE)
 end
 
@@ -28,7 +29,7 @@ function avoid_object_step(robot)
 	if nearest_object >= OBJECT_THRESHOLD then
 		return direction_module.DETECTED
 	else
-		robot.leds.set_all_colors("black")
+		colors.go_black(robot)
 		return direction_module.SAFE
 	end
 end
