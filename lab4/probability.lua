@@ -1,21 +1,30 @@
 local probability = {}
+local signal = require("signal")
+local ground = require("ground")
+
 local PS_max = 0.99
 local PW_min = 0.005
 
-function probability.should_stop(S, alpha, stopped)
-    return probability.apply(math.min(PS_max, (S + alpha * stopped)))
+function probability.should_stop(robot, S, alpha)
+    local total_stopped = signal.count_stopped(robot)
+    return probability.apply(math.min(PS_max, (S + alpha * total_stopped)))
 end
 
-function probability.should_walk(W, beta, walking)
-    return probability.apply(math.max(PW_min, (W - beta * walking)))
+function probability.should_walk(robot, W, beta)
+    local total_stopped = signal.count_stopped(robot)
+    return probability.apply(math.max(PW_min, (W - beta * total_stopped)))
 end
 
-function probability.should_walk_with_spot(W, beta, walking, ground)
-    return probability.apply(math.max(PW_min, (W - beta * walking) + ground))
+function probability.should_walk_with_spot(robot, W, beta)
+    local total_stopped = signal.count_stopped(robot)
+    local color = ground.detect_ground_color(robot)
+    return probability.apply(math.max(PW_min, (W - beta * total_stopped) + color))
 end
 
-function probability.should_stop_with_spot(S, alpha, stopped, ground)
-    return probability.apply(math.min(PS_max, (S + alpha * stopped) + ground))
+function probability.should_stop_with_spot(robot, S, alpha)
+    local total_stopped = signal.count_stopped(robot)
+    local color = ground.detect_ground_color(robot)
+    return probability.apply(math.min(PS_max, (S + alpha * total_stopped) - color))
 end
 
 function probability.apply(prob)
