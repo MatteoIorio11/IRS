@@ -1,13 +1,13 @@
 local ground = {}
 
 function ground.detect_ground_color(robot)
-    local sensors = robot.base_ground
-    local color = 1
+    local sensors = robot.motor_ground
+    local color = math.huge
     for i=1, #sensors do
-        local ground_color = sensors[i]
+        local ground_color = sensors[i].value
         color = math.min(ground_color, color)
     end
-    return color == 0 or color <= 10e-2
+    return color
 end
 
 return ground
