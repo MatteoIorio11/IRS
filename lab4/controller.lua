@@ -17,13 +17,13 @@ function step()
     if current % TICK == 0 then
         if currrent_state == states.STOPPED then
             local total_stopped = signal.count_stopped(robot)
-            local should_walk = probability.should_walk(TOTAL_ROBOTS, 0.01, 0.1, total_stopped)
+            local should_walk = probability.should_walk(0.01, 0.1, total_stopped)
             if should_walk then
                 handle_walk()
             end
         elseif currrent_state == states.WALKING then
             local total_stopped = signal.count_stopped(robot)
-            local should_stop = probability.should_stop(TOTAL_ROBOTS, 0.1, 0.05, total_stopped)
+            local should_stop = probability.should_stop(0.1, 0.05, total_stopped)
             if should_stop then
                 handle_stop()
             else
