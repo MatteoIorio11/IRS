@@ -27,11 +27,13 @@ function step()
     end
 end
 
+-- walking functionality, by using this function the robot checks if there are some other robots nearby, then if it
+-- detects other robot, it will avoid them, otherwise it will perform a random walk.
 function walking()
     if avoid_logic.sense(robot) then
         avoid_logic.callback(robot)
     else
-        walk.move(robot)
+        walk.walk_randomly(robot)
     end
 end
 
