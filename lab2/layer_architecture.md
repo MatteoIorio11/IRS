@@ -20,6 +20,10 @@ Because one of the requirement of this task was to develop the robot behaviour u
 
 In order to model this priority I have placed all the logic inside a decreasing monotonic stack, where on top of the stack the is the logic with the highest priority:
 
+![stack structure](./images/monotonic_stack.png)
+
+As can be seen from the image, every time that the *sense* method returns false, it will be then automatically checked the lower layer. When the *sense* method will return true, the *callback* method will be invoked, it will be ran a specific logic and the execution of the exploration of the stack will be *interrupted* by using a *break*, in this way the robot is always able to run the most important task each time.
+
 ```lua
 local photo_logic = require("photo_logic")
 local avoid_logic = require("avoid_logic")
@@ -34,7 +38,8 @@ STACK = {
 }
 ```
 
-Then each time the *step* method is invoked inside the controller, we explore the stack by going from top to bottom (from the highest priority to the lowest priority) and for each of the logic we invoke the api *sense*, then if it returns true it will be called the *callback* method, in this way the robot will execute the logic of that particular task and finally we break from the loop because the logic with an highest priority has been executed and the remaining ones can not be executed. If none of the logic is ran, the robot will invoke the random walk.
+### Step Analysis
+Each time the *step* method is invoked inside the controller, the thread will explore the stack by going from *top* to *bottom* (from the highest priority to the lowest priority) and for each *logic* we invoke the api *sense*, if it returns true it will be called the *callback* method, in this way the robot will execute the logic with the highest priority so far, and finally we break from the loop because the logic with an highest priority has been executed. If none of the logic is ran, the robot will invoke the random walk.
 
 ```lua
 function step()
@@ -52,3 +57,5 @@ function step()
 	end
 end
 ```
+
+To be noticed, the random walk sense method always returns *true*, this is because it does not need specific conditions to run. Also if none of the behaviour has ran, I automatically ran the behaviours the least priority.
