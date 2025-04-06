@@ -39,9 +39,31 @@ As the task said, the robot must be able to communicate with its neighbours usin
 
 ![signaling](./images/signaling.png)
 
-The implementation of the *signaling* logic can be found in the *signal.lua*, and every method follows the same logic:
-1. *count phase*: count the number of neighbours in a specific state;
-2. 
+The implementation of the *signaling* logic can be found in the *signal.lua*. Every function that can be found in this file, works only on one specific bit that is the *CHANNEL* bit.
+
+```lua
+function signal.start_moving(robot)
+	robot.range_and_bearing.set_data(CHANNEL, WALKING)
+end
+
+function signal.stop_moving(robot)
+	robot.range_and_bearing.set_data(CHANNEL, STOP)
+end
+
+function signal.count_status(robot, status)
+	local robots = 0
+	for i = 1, #robot.range_and_bearing do
+		local neighbour = robot.range_and_bearing[i]
+		if neighbour.range < MAX_RANGE and neighbour.data[CHANNEL] == status then
+			robots = robots + 1
+		end
+	end
+	return robots
+end
+```
+
+When a single robot has to run the probability operation it needs to count the number of neighbours in a specific state, in order to do that I have implemented the method *count_status*, that counts the number of robot in a specific range (*MAX_RANGE*) in a given *status*. The MAX_RANGE is a constant set to 30 cm.
+
 
 ### Design Probability
 The probability is *driven* by the number of all the other robots in a specific state, in order to do that every time the robot *checks* for the probability it will also *count* the states of all its *neighbours* (in a given range). So in this way the robot will be able to rescale its *probability*.  Both probabilities depends on the number of the other robots in a given state, for example every time the robot tries to *stop*, it will count the number of robots around it that are currently *stop*, the higher the number and the higher the probability for the robot to stop, the same goes for the *walking* transition. For what concernes the *second exercise* the probability is also guided by the *ground color*, if the ground color is black then the robot will try more often to stop.
@@ -69,10 +91,3 @@ function probability.apply(prob)
 	return t <= prob
 end
 ```
-
-
-
-### Design Transition from States
-
--- Segnalazione dello stato corrente
--- Possibile passaggio da uno stato all'altro 
