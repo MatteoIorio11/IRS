@@ -17,7 +17,9 @@ I have developed three different files, with a single common API, *get_vector*, 
 2. *repulsive*: contains the vector with the repulsive force;
 3. *random_force*: contains the vector with the random force.
 
-The inside the controller *step* function the robot calls the *get_vector* method of each file, sum all the vectors and call the *motor_schema* logic for moving the robot towards a direction.
+![forces](./images/forces.png)
+
+The controller *step* calls the *get_vector* method of each file, sum all the vectors and call the *motor_schema* logic for moving the robot towards a direction.
 
 ```lua
 function step()
