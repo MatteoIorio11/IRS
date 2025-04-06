@@ -8,7 +8,9 @@ The entire behaviour of this task, is divided into three different logics, then 
 2. *photo_logic*: this file contains the logic for the phototaxi task;
 3. *move_random_logic*: logic for random walking in the arena.
 
-Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, I have decided to add the random walking logic only when the robot detects not light and in the nearby there are not obstacles to avoid. Each of this *file* exposes two different methods:
+Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, I have decided to add the random walking logic only when the robot detects not light and in the nearby there are not obstacles to avoid. This entire system works with a logic that can be categorized as a subclass of a *fuzzy logic*.
+
+Each of this *file* exposes two different methods:
 
 1. *sense*: search in the environment around the robot and decided if it has to do something;
 2. *callback*: apply the main logic designed in the file (avoid the obstacle, go towards the light, random walk).
@@ -33,7 +35,9 @@ In order to implement the *obstacle avoidance*, I have used a very simple logic,
 
 ### PhotoTaxi
 
-The phototaxi logic involved the use of the light sensors, more in particular I have grouped all the sensors into 4 different groups, where each one of the has exaclty 6 different sensors. 
+The phototaxi logic involved the use of the light sensors, more in particular I have grouped all the sensors into 4 different groups, where each one of the has exaclty 6 different sensors.
+
+![groups](./images/groups.png)
 
 ```lua
 DIRECTIONS = {
@@ -44,7 +48,10 @@ DIRECTIONS = {
 }
 ```
 
+
 Then for each of the group the robot adds up all the sensor's values, then it will follow the direction that has the highest score. In this ways It is possible to reach for the light. The *sense* method of this logic checks if the robot detects some light in the arena, if it does then the *callback* method will apply the logic for moving the robot towards the direction with the highest score calculated in the *sense* method. It is important to say that this method and in particular the *sense* will be called only if the object detection task has not detect any object at all.
+
+![phototaxi](./images/phototaxi.png)
 
 ### Random Walk
 The random walk logic follows a simple idea, using the *robot.random.uniform* I generate two different values, that will be then set as the left and right velocity of the wheels.
