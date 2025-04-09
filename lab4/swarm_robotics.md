@@ -1,5 +1,5 @@
 # Swarm Robotic
-The goal of this exercise was to develop an *Aggregation Beheaviour*. Where a robot can be in two different states depending on specific conditions. The robot can be stopped and can starting moving by using a specific probability (Pw), and also if the robot is walking it can stops by using another probability (Ps). While the robot is walking it also has to *avoid* all the other robots nearby, and when there are not any other robots around it has to randomly walk in the arena. The probability of the robot to going from the status of *WALKING* to *STOPPED* depends on how many robots are stopped around a specifc arean from the robot, and the probability of the robot for going from *STOPPED* to *WALKING* depends on the number of robots that are currently walking around the current robot.
+The goal of this exercise was to develop an *Aggregation Beheaviour*. Where a robot can be in two different states depending on specific conditions. The robot can be stopped and it can start moving by using a specific probability (Pw), and also if the robot is walking it can stop by using another probability (Ps). While the robot is walking it also has to *avoid* all the other robots nearby, and when there are not any other robots around it has to randomly walk in the arena. The probability of the robot to going from the status of *WALKING* to *STOPPED* depends on how many robots are stopped around a specifc arean from the robot, and the probability of the robot for going from *STOPPED* to *WALKING* depends on the number of robots that are currently walking around the current robot.
 
 ## Design
 This excercise has a focus specifically on the *swarm robotic topic*. And I have divided the entire problem in different specifics. And all this specifics has the main goal of creating clusters of stopped robots. The first thing that I did was the creation of the Robot's State Machine:
@@ -10,7 +10,7 @@ There are two main states:
 1. *Stopped*: this is the state where the robot does not move at all;
 2. *Walking*: in this state the robot walks randomly inside the arena. while it tries to avoid all the other robots.
 
-As can be seen from the image, when the robot is inside the *WALKING* state, it has to always avoid objects if detected, otherwise it randomly walk, it is important to say that every time the robot can fall in the *STOPPED* status. In order to achieve this behaviour, inside the step method the robot get the probability for possibly change the state, if the robot can change then it will the transtion into the newer state.
+As can be seen from the image, when the robot is inside the *WALKING* state, it has to always avoid objects if detected, otherwise it randomly walk, it is important to say that every time the robot can fall in the *STOPPED* status. In order to achieve this behaviour, inside the step method the robot gets the probability for changing its state, if the robot can change then it will transition into the newer state.
 
 ```lua
 function step()
@@ -66,7 +66,7 @@ When a single robot has to run the probability operation it needs to count the n
 
 
 ### Design Probability
-The probability is *driven* by the number of all the other robots in a specific state, in order to do that every time the robot *checks* for the probability it will also *count* the states of all its *neighbours* (in a given range). So in this way the robot will be able to rescale its *probability*.  Both probabilities depends on the number of the other robots in a given state, for example every time the robot tries to *stop*, it will count the number of robots around it that are currently *stop*, the higher the number and the higher the probability for the robot to stop, the same goes for the *walking* transition. For what concernes the *second exercise* the probability is also guided by the *ground color*, if the ground color is black then the robot will try more often to stop.
+The probability is *driven* by the number of all the other robots in a specific state, in order to do that every time the robot *checks* for the probability it will also *count* the states of all its *neighbours* (in a given range). So in this way the robot will be able to rescale its *probability*.  Both probabilities depends on the number of the other robots in a given state, for example every time the robot tries to *stop*, it will count the number of robots around it that are currently *stopped*, the higher the number and the higher the probability for the robot to stop, the same goes for the *walking* transition. For what concernes the *second exercise* the probability is also guided by the *ground color*, if the ground color is black then the robot will try more often to stop.
 
 Every method in this file follows the same structure:
 1. *count phase*: count the number of neighbours in a specific state;
@@ -91,3 +91,59 @@ function probability.apply(prob)
 	return t <= prob
 end
 ```
+
+### Possible Design for Excercise 3
+The goal of the third exercise is to cluster all the robots into one single spot. My general idea is to use along with the already use channel 1, another channel, we call it 2. This channel is used to store the total number of stopped robots detected from each robot. In this way each robot can ask and get the number of total robots stopped that are detected from all the neighbouring robots. Then if one of values that are get from this channel is greather than the one calculated from the current robot, this will trigger the random walking of the robot. The goal then is to cluster all the robots in one single dot, in order to do this, when a robot starts walking it will use a greedy approach in which it will always chose the direction that maximise the number robots detected in the second channel, so the angle it will always be adjusted using the number of total robots detected from the second channel.
+
+#### Greedy Proof
+
+##### 1. Problem Formalization
+
+- **Environment**: A bounded space where `n` robots can move.
+- **Objective**: All robots should eventually cluster into a single location (or a small area within ε-distance).
+- **Sensing/Communication**:
+  - **Channel 1**: status of the nearby robot (*WALKING* or *STOPPED*).
+  - **Channel 2**: Each robot broadcasts the number of stopped robots it can perceive. This allows other robots to estimate where clusters are forming.
+- **Behavior**:
+  - A robot begins **random walking** if it detects that some neighbor sees more stopped robots than it does.
+  - It then chooses the direction that **maximizes** the number of stopped robots (as indicated by values from Channel 2).
+  - This is a **greedy strategy**: always move in the direction of greatest local density.
+
+##### 2. Greedy Algorithm Intuition
+
+- At each step, a robot chooses the **locally optimal direction** — the one with the highest reported number of stopped robots.
+- It does not compute a global plan but acts **myopically**, based on immediate perceived gain.
+- This behavior mirrors classic greedy algorithms: *always make the best immediate move*.
+
+##### 3. Proof That Greedy Works
+
+We aim to show that this greedy movement leads all robots to converge to a single cluster.
+
+###### Step 1: Define a Potential Function
+
+Let:
+$$\Phi = \sum_{i=1}^n \text{distance}(r_i, c)$$
+
+Where:
+- $r_i$ is the position of robot \( i \),
+- \( c \) is the center of the current cluster (e.g., center of mass or mode of stopped robots).
+
+###### Step 2: Show Monotonic Decrease
+
+- When a robot moves greedily toward a region of higher robot density (based on Channel 2), it moves closer to the cluster center.
+- Therefore, its distance to \( c \) decreases.
+- As a result, the potential function \( \Phi \) strictly **decreases**.
+
+###### Step 3: Show Convergence
+
+- The potential function $\Phi$ is **bounded below by 0** (all robots in the same position).
+- Since $\Phi$ decreases with each greedy movement, and is bounded, it must **converge**.
+- Once no robot sees a higher value in Channel 2 elsewhere, movement stops — this is a **stable global cluster**.
+
+###### Step 4: No Local Minima Trap
+
+- Channel 2 creates a "density field" that acts like a **pheromone gradient**.
+- Greedy robots always move toward denser regions — they can't get stuck in false local optima.
+- As more robots stop in a location, the gradient becomes steeper, reinforcing the correct clustering behavior.
+
+Thus, greedy behavior leads to all robots clustering at a single location.
