@@ -48,7 +48,7 @@ function handle_stop()
     walk.set_velocity(robot, 0, 0)
 end
 
--- this function handle all the operations the robot has to do when it comes to start walkingl:
+-- this function handle all the operations the robot has to do when it comes to start walking:
 -- 1: signal all the other robots that it will start walking
 -- 2: turn off all the leds
 function handle_walk()
