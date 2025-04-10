@@ -113,6 +113,7 @@ end
 
 This new version of the random walk allows the robot to cover an area much more dense, by picking a direction and going into a direction for a number of random steps.
 
+---
 ### Possible Design for Excercise 3
 The goal of the third exercise is to cluster all the robots into one single spot. My general idea is to use along with the already use channel 1, another channel, we call it 2. This channel is used to store the total number of stopped robots detected from each robot. In this way each robot can ask and get the number of total robots stopped that are detected from all the neighbouring robots. Then if one of values that are get from this channel is greather than the one calculated from the current robot, this will trigger the random walking of the robot. The goal then is to cluster all the robots in one single dot, in order to do this, when a robot starts walking it will use a greedy approach in which it will always chose the direction that maximise the number robots detected in the second channel, so the angle it will always be adjusted using the number of total robots detected from the second channel.
 
