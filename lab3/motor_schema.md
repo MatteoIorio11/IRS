@@ -35,7 +35,7 @@ There are also some utilities stored in:
 2. *angle_utils*: contains angle utilities for normalise an angle or returnig the opposite of an angle.
 
 ### Attractive Force
-Because this task required the fact of developing the logic using the *motor schema* it was necessary to define the what so called *perception schema*, which is the *rule* used for generating the *vector schema*. For the perception schema I used the *highest* value among all the light sensors, then I create the vector using the angle of the sensor with the highest value and for what concerns the *length* of the vector I use the sensor's value combined with a formula (in this way I can module the amount of force that the robot feels based on the distance).
+Because this task required the fact of developing the logic using the *motor schema* it was necessary to define the what so called *perception schema*, which is the *rule* used for generating the *vector schema*. For the perception schema I have used the *highest* value among all the light sensors, then I create the *vector* using the angle of the sensor with the highest value and for what concerns the *length* of the vector I use the sensor's value combined with a *formula* (in this way I can module the amount of force that the robot feels based on the distance).
 
 ```lua
 function perception.from_sensors(sensors, MAX_VALUE, thr, force)
@@ -86,7 +86,7 @@ end
 Even in this case the formula for moduling the vector's length is based on the distance from the object itself, in this way if the robot is *very close* to the object it will *accellerate*.
 
 ### General idea for moduling the forces
-The idea behind the *module_force* comes from the electromagnetic fields and particles theory, more in particular I have imagined the robot as a particle with a *polarity*, and all the forces generates *electromagnetic fields*. If the type of force is *attractive* it means that it has the *opposite* charge of the particle, instead if the force is *repulsive* the field has the *same polarity* of the particle. From the theory we know that the particle will *accellerate* based on the distance that the particle has from the source of the magnetic field and I tried to replicate this phenomenon using the *module_force* function. The formula that i have used is very simple, in this way the result can be still seen and for the robot itself will be much more easy reach its goal.
+The idea behind the *module_force* comes from the electromagnetic fields and particles theory, more in particular I have imagined the robot as a particle with a *polarity*, and all the forces generates *electromagnetic fields*. If the type of force is *attractive* it means that it has the *opposite* charge of the particle, instead if the force is *repulsive* the field has the *same polarity* of the particle. From the theory we know that the particle will *accellerate* based on the distance that the particle has from the source of the magnetic field and I tried to replicate this phenomenon using the *module_force* function. The formula that I have used are very simple, in this way the result can be still seen and for the robot itself will be much more easy reach its goal, but for further experiments it can also be interesting to create a moduling force based on the *Lorentz forces*.
 
 ### Random Force
 The last force that the robot feels is the random one, in this case I just create a random angle in radian and a random length in the interval [0, 1].

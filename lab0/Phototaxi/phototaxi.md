@@ -19,7 +19,7 @@ DIRECTIONS = {
 	{ direction = direction_module.WEST, sensors = { 9, 8, 7, 6, 5, 4 } },
 }
 ```
-The the logic for understant where is the *maximum* amount of light among all this group was achieve by a function that takes in input the sensor's indexs and calculate the sum of all the light values. Then the *direction* with the maximum value will be used to guidew the robot towards the source of light.
+The the logic for searching where is the *maximum* amount of light among all this *group* was achieve by a function that takes in input the sensor's indexs and calculate the sum of all the light values. Then the *direction* with the maximum value will be used to guide the robot towards the source of light.
 
 ```lua
 function detect_light_angle(robot)

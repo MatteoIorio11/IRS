@@ -60,7 +60,7 @@ end
 
 To be noticed, the random walk sense method always returns *true*, this is because it does not need specific conditions to run. Also if none of the behaviour has ran, I automatically ran the behaviours with the least priority.
 
-### Unexpeted Result
+### Behavioural Tree
 This layered architecture really resemble a *behavioural tree*, because the controller executes the real behaviour of a node only when its status is true (in this case it means that the node has to do something), then the controller execute the code inside the node (by calling the *callback* method) and it will return. Instead if the *sense* method, which contains the *activation condition*, returns false the *controller* will step on the next most important behaviour to check and possibly execute it. By using this type of architecture I have noticed that the code is really well separated, and the fact of splitting the activation condition and the execution code in two different methods linked to a single behaviour really helps in to creating long chains of more complex mechanism in which a signle behaviour can be composed by multiple simple behaviours and so on (by following the *Divide et Conquer* method).
 
 ![behavioural tree](./images/bt.png)
