@@ -17,12 +17,12 @@ function step()
     if currrent_state == states.STOPPED then
         local should_walk = probability.should_walk(robot, 0.01, 0.1)
         if should_walk then
-            handle_walk()
+            handle_walk() -- handle the transition into the newer state
         end
     elseif currrent_state == states.WALKING then
         local should_stop = probability.should_stop(robot, 0.1, 0.05)
         if should_stop then
-            handle_stop()
+            handle_stop() -- handle the transition into the newer state
         else
             walking()
         end
@@ -30,7 +30,7 @@ function step()
 end
 ```
 
-In this way the robot every time tries to change its state thanks to the probabilty, both methods *should_walk* and *should_stop* returns a boolean, in this way if the probability is true, the robot has to change its state. The transition from the *Stopped* state to the *Walking* (and viceversa) is guided by two different probabilites:
+In this way the robot can transitate in another state using a probability, both methods *should_walk* and *should_stop* returns a boolean, in this way if the probability is true, the robot has to change its state. The transition from the *Stopped* state to the *Walking* (and viceversa) is guided by two different probabilites:
 1. *PS*: is the probability used by the robot for switching from *Walking* to *Stopped*;
 2. *PW*: is the probability used by the robot for switching from *Stopped* to *Walking*.
 
@@ -63,7 +63,6 @@ end
 ```
 
 When a single robot has to run the probability operation it needs to count the number of neighbours in a specific state, in order to do that I have implemented the method *count_status*, that counts the number of robot in a specific range (*MAX_RANGE*) in a given *status*. The MAX_RANGE is a constant set to 30 cm.
-
 
 ### Design Probability
 The probability is *driven* by the number of all the other robots in a specific state, in order to do that every time the robot *checks* for the probability it will also *count* the states of all its *neighbours* (in a given range). So in this way the robot will be able to rescale its *probability*.  Both probabilities depends on the number of the other robots in a given state, for example every time the robot tries to *stop*, it will count the number of robots around it that are currently *stopped*, the higher the number and the higher the probability for the robot to stop, the same goes for the *walking* transition. For what concernes the *second exercise* the probability is also guided by the *ground color*, if the ground color is black then the robot will try more often to stop.
@@ -112,10 +111,9 @@ end
 ```
 
 This new version of the random walk allows the robot to cover an area much more dense, by picking a direction and going into a direction for a number of random steps.
-
 ---
 ### Possible Design for Excercise 3
-The goal of the third exercise is to cluster all the robots into one single spot. My general idea is to use along with the already use channel 1, another channel, we call it 2. This channel is used to store the total number of stopped robots detected from each robot. In this way each robot can ask and get the number of total robots stopped that are detected from all the neighbouring robots. Then if one of values that are get from this channel is greather than the one calculated from the current robot, this will trigger the random walking of the robot. The goal then is to cluster all the robots in one single dot, in order to do this, when a robot starts walking it will use a greedy approach in which it will always chose the direction that maximise the number robots detected in the second channel, so the angle it will always be adjusted using the number of total robots detected from the second channel.
+The goal of the third exercise is to cluster all the robots into one single spot. My general idea is to use along with the already used channel 1, another channel, we call it 2. This channel is used to store the total number of stopped robots detected from each robot. In this way each robot can ask and get the number of total robots stopped that are detected from all the neighbouring robots. Then if one of values that are get from this channel is greather than the one calculated from the current robot, this will trigger the random walking of the robot. The goal then is to cluster all the robots in one single dot, in order to do this, when a robot starts walking it will use a greedy approach in which it will always chose the direction that maximise the number robots detected in the second channel, so the angle it will always be adjusted using the number of total robots detected from the second channel.
 
 #### Greedy Proof
 
