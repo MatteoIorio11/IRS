@@ -27,7 +27,6 @@ end
 
 -- Phototaxi callback, move the robot towards the light
 function photo_module.callback(robot)
-	log("robot: Priority over photo task")
 	move_robot(robot)
 end
 

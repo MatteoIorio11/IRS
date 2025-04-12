@@ -15,7 +15,6 @@ end
 
 -- Callback of the module, It means that the robot previously has detected an object and It needs to avoid it.
 function avoid_module.callback(robot)
-	log("robot: Priority over avoid object task")
 	robot.leds.set_all_colors("red")
 	avoid_object(robot, ANGLE)
 end
