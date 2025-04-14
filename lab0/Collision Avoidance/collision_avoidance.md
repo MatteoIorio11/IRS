@@ -1,7 +1,7 @@
 # Collision Avoidance Task
 This task required the goal of *random walking* while *avoding* the obstacles that were present in the arena. The robot does not have a specific task to do, so It has not a final destination to reach, It just
 wants to walk freely in the arena and in the meantime avoid all the obstacles that are present along Its journey.
-# Design
+## Design
 In order to achieve the desired goal of the task, I have divided the two logics into two different and separated files:
 1. *move_random_logic*: inside this file I have developed the entire logic for the *random walking*;
 2. *avoid_logic*: the content of this file represent the logic for *avoiding* the different obstacles that are present in the arena.
@@ -9,8 +9,10 @@ In order to achieve the desired goal of the task, I have divided the two logics 
 The robot always checks if it is possible to randomly walk, because if the *footbot* detects an obstacle, the first thing that It will try to do will be to avoid It with a logic that will be further described.
 So, in case there are no obstacles in front or around the robot, then the random walk can be executed without worrying about colliding with an obstacle.
 
-## Random walk
+### Random walk
 For what concernes the random walking of the robot, I wanted to use a simple logic for the generation of this *behaviour*. So in order to stay as as simple as possible and in the meantime achieve the goal of *random walking*, I have used the *footbot random module*. More precisely, I have used the *uniform* method for automatically generate two different values inside the interval [0, 15]. Then both of this two values, where set as the velocities for the two wheels.
+
+![Random Walk!](./images/Random.png)
 
 ```lua
 function moverandommodule.move(robot)
@@ -22,11 +24,13 @@ end
 ```
 
 
-# Collision Avoidance
+### Collision Avoidance
 The most important task that the robot has to do, is the collision avoidance, more in particular the robot is equipped with proximity sensors, that can detect an obstacle up to 10cm from the robot itself. The next thing that I had to do was to find a some sort of logic that included this sensors for avoiding the obstacles in the nearby area of the robot. The robot has 24 sensors around It, and each of the sensor returns two different values:
 
 1. *value*: the detected value of the sensor, in this case is the distance from the object;
 2. *angle*: the sensor's angle in radiant.
+
+![Collision Avoidance](./images/cavoidance.png)
 
 Given this two information, my main idea was to execute a linear scan over all the 24 sensors, and get the maximum value detected from this sensors and also its angle.
 

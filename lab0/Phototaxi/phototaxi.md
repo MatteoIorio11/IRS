@@ -3,6 +3,8 @@ The main goal of this task was to develop a robot's behaviour, capable of guidin
 # Design
 In order to achieve the task goal, I have developed the *phototaxi beahviour* in two different files. The first file, it is called *photo_logic* and contains the entire logic for guiding the robot towards the source of the light, then I have also developed another behaviour which is the *random walk* that is implemented inside the *move_random_logic*. I have decided to add the random walk because I have questioned my self what could happen if the robot does not detect any light at all. It will not move at all, so I have decided to inject the random walking only when the robot does not sense any light at all.
 
+![Phototaxi](./images/Pt.png)
+
 ## PhotoTaxi
 The phototaxi task, required the ability from the robot for detecting light in the arena. fortunately the robot is equipped with 24 light sensors, where each of them returns two different values:
 
