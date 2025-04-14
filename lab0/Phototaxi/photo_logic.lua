@@ -20,9 +20,8 @@ DIRECTIONS = {
 
 -- Sense all light sensors, check if the robot should go towards the light
 function photo_module.sense(robot)
-	-- #NOTE: Before looking for the light, we first check if there are none objects around the robot. If so, then we can procede into searching for the light.
 	LIGHT = detect_light_angle(robot) -- get the angle and the amount of light detected from sensors.
-	return not (DIRECTION == direction_module.VOID)
+	return not (DIRECTION == direction_module.VOID) -- The current status has been changed inside the previous function.
 end
 
 -- Phototaxi callback, move the robot towards the light
@@ -39,11 +38,11 @@ function detect_light_angle(robot)
 	-- #NOTE: Because I have divided the robot's sensors into 4 groups, we have to check in which direction we have the
 	--  brightest spot. In this way the robot know's the direction of the source of light.
 	for i = 1, #DIRECTIONS do
-		local pair = DIRECTIONS[i]
-		local intensity, max_light = detect_light_intensity(robot, pair.sensors)
+		local pair = DIRECTIONS[i] -- get all the sensors indexs
+		local intensity, max_light = detect_light_intensity(robot, pair.sensors) -- use the indexs for checking the brightness
 		if intensity >= brightest_value then
 			brightest_value = intensity
-			direction = pair.direction
+			direction = pair.direction -- new source of direction
 			max_local_value = max_light
 		end
 	end
@@ -70,16 +69,17 @@ end
 ---comment Move the robot by using the DIRECTION and the LIGHT
 function move_robot(robot)
 	local factor = 2
-	-- #NOTE: Set as upper bound MAX_VELOCITY, in this way we do not break the constraint.
-	general_module.CURRENT_VELOCITY =
-		math.min(math.max(general_module.CURRENT_VELOCITY * factor, 0), general_module.MAX_VELOCITY)
 	if DIRECTION == direction_module.NORTH then
+		-- go straight
 		robot.wheels.set_velocity(general_module.CURRENT_VELOCITY, general_module.CURRENT_VELOCITY)
 	elseif DIRECTION == direction_module.SOUTH then
+		-- turn around
 		robot.wheels.set_velocity(general_module.CURRENT_VELOCITY, -general_module.CURRENT_VELOCITY)
 	elseif DIRECTION == direction_module.WEST then
+		-- go left
 		robot.wheels.set_velocity(0, general_module.CURRENT_VELOCITY)
 	else
+		-- go right
 		robot.wheels.set_velocity(general_module.CURRENT_VELOCITY, 0)
 	end
 end
