@@ -54,8 +54,10 @@ end
 ---comment: This method is used for avoiding the detected object, by using the input angle from which the object was detected.
 function avoid_object(robot, angle)
 	if angle > 0 then
+		-- go right, in the left side of the robot we have only positive angles
 		robot.wheels.set_velocity(general_module.MAX_VELOCITY, 0)
 	else
+		-- go left, in the right part of the robot we have negative angles
 		robot.wheels.set_velocity(0, general_module.MAX_VELOCITY)
 	end
 end
