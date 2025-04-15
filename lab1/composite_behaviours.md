@@ -1,5 +1,5 @@
 # Composite Behaviours
-The main goal of this task was to develop a robot's behaviour capable of avoiding all the obstacles that are present inside the arena and in the mean time reach the source of light. There are no requirements in what the robot has to do when there is no light at all.
+The robot is asked to find a light source and go towards it, while avoiding collisions with other objects, such as walls, boxes and other robots. The robot should reach the target as fast as possible and, once reached it, it should stay close to it (either standing or moving). For physical constraints the wheel velocity cannot exceed the value 15 (i.e., 15−2m/s).
 
 ## Design
 The entire behaviour of this task, is divided into three different logics, then each logic is implemented inside a specific file, in order to have a better encapsulation:
@@ -9,6 +9,8 @@ The entire behaviour of this task, is divided into three different logics, then 
 3. *move_random_logic*: logic for random walking in the arena.
 
 Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, I have decided to add the random walking logic only when the robot detects not light and in the nearby there are not obstacles to avoid.
+
+![Overall Task](./images/task.png)
 
 Each of this *file* exposes two different methods:
 
@@ -31,7 +33,17 @@ end
 By doing this I am able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, It will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of *light* has been detected.
 
 ### Obstacle Avoidance
-In order to implement the *obstacle avoidance*, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the *highest score* (it means that I get the closest sensor to an object), then I also save the *angle* of this sensor. By using the *angle*, then the robot is able to avoid the obstacle, by going towards the *opposite* direction. The *sense* method of this logic checks if there is an obstacle to avoid, it returns *true* otherwise *false*, then inside the *callback* method there is the actual logic for avoiding the detected obstacle.
+In order to implement the *obstacle avoidance*, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the *highest score* (it means that I get the closest sensor to an object), then I also save the *angle* of this sensor. By using the *angle*, the robot is able to avoid the obstacle, by going towards the *opposite* direction. The *sense* method of this logic checks if there is an obstacle to avoid, it returns *true* otherwise *false*, then inside the *callback* method there is the actual logic for avoiding the detected obstacle.
+
+```lua
+function avoid_object(robot, angle)
+	if angle > 0 then
+		robot.wheels.set_velocity(general_module.MAX_VELOCITY, 0)
+	else
+		robot.wheels.set_velocity(0, general_module.MAX_VELOCITY)
+	end
+end
+```
 
 ### PhotoTaxi
 The phototaxi logic involved the use of the light sensors, more in particular I have grouped all the sensors into 4 different groups, where each one of the has exaclty 6 different sensors.
@@ -49,7 +61,41 @@ DIRECTIONS = {
 
 Then for each of the group the robot adds up all the sensor's values, then it will follow the direction that has the highest score. In this ways It is possible to reach for the light. The *sense* method of this logic checks if the robot detects some light in the arena, if it does then the *callback* method will apply the logic for moving the robot towards the direction with the highest score calculated in the *sense* method. It is important to say that this method and in particular the *sense* will be called only if the object detection task has not detect any object at all.
 
-![phototaxi](./images/phototaxi.png)
+```lua
+function detect_light_intensity(robot, sensors)
+	local intensity = 0
+	local max_intensity = 0
+	for i = 1, #sensors do
+		local sensor = sensors[i]
+		local light_value = (robot.light[sensor].value * 10)
+		intensity = intensity + light_value
+		max_intensity = math.max(max_intensity, light_value)
+	end
+	return intensity, max_intensity
+end
+```
+The code provided above, has the main logic of adding up all the values detected from the light sensors. This operation will be done for all the different groups (which are 4 in total), then the group with the highest score will guide the robot towards the source of light.
+
+
+```lua
+function detect_light_angle(robot)
+	local brightest_value = 0.0
+	local max_local_value = 0
+	local direction = direction_module.VOID
+	for i = 1, #DIRECTIONS do
+		local pair = DIRECTIONS[i]
+		local intensity, max_light = detect_light_intensity(robot, pair.sensors)
+		if intensity >= brightest_value then
+			brightest_value = intensity
+			direction = pair.direction
+			max_local_value = max_light
+		end
+	end
+	DIRECTION = direction
+	return max_local_value
+end
+```
+
 
 ### Random Walk
 The random walk logic follows a simple idea, using the *robot.random.uniform* I generate two different values, that will be then set as the left and right velocity of the wheels.
