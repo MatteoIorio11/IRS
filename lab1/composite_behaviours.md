@@ -2,13 +2,13 @@
 The robot is asked to find a light source and go towards it, while avoiding collisions with other objects, such as walls, boxes and other robots. The robot should reach the target as fast as possible and, once reached it, it should stay close to it (either standing or moving). For physical constraints the wheel velocity cannot exceed the value 15 (i.e., 15−2m/s).
 
 ## Design
-The entire behaviour of this task, is divided into three different *logics*, then each logic is implemented inside a specific file, in order to have a better *separation of concerns*:
+The entire behaviour of this task, is divided into three different *logics*, each logic is implemented inside a specific file, in order to have a better *separation of concerns*:
 
 1. *avoid_logic*: inside this file is implemented the logic for avoiding the obstacles in the arena;
 2. *photo_logic*: this file contains the logic for the phototaxi task;
 3. *move_random_logic*: logic for random walking in the arena.
 
-Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, I have decided to add the random walking logic only when the robot detects not light and in the nearby there are not obstacles to avoid.
+Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, it was necessary to add a new behaviour to the robot for walking whene there is no light at all or no objects are detected in the nearby.
 
 ![Overall Task](./images/task.png)
 
@@ -18,12 +18,12 @@ Each of the *file* that implements a behaviour exposes two different methods:
 2. *callback*: apply the main logic designed in the file (avoid the obstacle, go towards the light, random walk).
 
 ### Composition of Different behaviours
-Because the system has more behaviours that need to be joined and used together in different moments, I have decided to assign different priorities to all the behaviours:
+Because the system has more behaviours that need to be joined and used together in different moments, each behaviour has its own priority:
 1. *Priority Very High*: collision avoidance;
 2. *Priority High*: phototaxi;
 3. *Priority Low*: random walk.
 
-In order to *execute* the behaviour with the highest priority, I have used a cascade of *ifs*. The final result allows the robot to automatically decide what it has to do in a specific moment.
+In order to *execute* the behaviour with the highest priority, the controller is implemented using a cascade of *ifs*. The final result allows the robot to automatically decide what it has to do in a specific moment.
 
 ```lua
 function step()
@@ -36,11 +36,11 @@ function step()
 	end
 end
 ```
-By doing this I am able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, it will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of *light* has been detected.
+By doing this the robot is able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, it will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of *light* has been detected.
 
 
 ### Obstacle Avoidance
-In order to implement the *obstacle avoidance*, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the *highest score* (it means that I get the closest sensor to an object), then I also save the *angle* of this sensor. By using the *angle*, the robot is able to avoid the obstacle, by going towards the *opposite* direction. The *sense* method of this logic checks if there is an obstacle to avoid, it returns *true* otherwise *false*, then inside the *callback* method there is the actual logic for avoiding the detected obstacle.
+In order to implement the *obstacle avoidance*, the robot uses the following logic: given all the 24 *proximity* sensors, the robot gets the sensor with the *highest value* (it means that the robot is close to an object) and also the *angle* of the sensor. By using the *angle*, the robot is able to avoid the obstacle, by going towards the *opposite* direction. The *sense* method of this logic checks if there is an obstacle to avoid, it returns *true* otherwise *false*, then inside the *callback* method there is the actual logic for avoiding the detected obstacle.
 
 ```lua
 function avoid_object(robot, angle)
@@ -53,7 +53,7 @@ end
 ```
 
 ### PhotoTaxi
-The phototaxi logic involved the use of the light sensors, more in particular I have grouped all the sensors into 4 different groups, where each one of the has exaclty 6 different sensors.
+The phototaxi logic involved the use of the light sensors, more in particular all the robot's sensors are grouped into 4 different groups, where each one of the has exaclty 6 different *sensors*.
 
 ![groups](./images/groups.png)
 
@@ -66,7 +66,7 @@ DIRECTIONS = {
 }
 ```
 
-Then for each of the group the robot adds up all the sensor's values, then it will follow the direction that has the highest score. In this ways It is possible to reach for the light. The *sense* method of this logic checks if the robot detects some light in the arena, if it does then the *callback* method will apply the logic for moving the robot towards the direction with the highest score calculated in the *sense* method. It is important to say that this method and in particular the *sense* will be called only if the object detection task has not detect any object at all.
+Then for each of the group the robot adds up all the sensor's values, then it will follow the direction that has the *highest score*. In this ways it is possible to reach for the light. The *sense* method of this logic checks if the robot detects some light in the arena, if it does then the *callback* method will apply the logic for moving the robot towards the direction with the highest score calculated in the *sense* method. It is important to say that this method and in particular the *sense* will be called only if the object detection task has not detect any object at all.
 
 ```lua
 function detect_light_intensity(robot, sensors)
