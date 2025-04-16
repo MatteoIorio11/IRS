@@ -17,7 +17,13 @@ Each of the *file* that implements a behaviour exposes two different methods:
 1. *sense*: search in the environment around the robot and decided if it has to do something, this is related to its behaviour, for example if this method is called on the *phototaxi* logic, the robot will search for any light in the surrounding;
 2. *callback*: apply the main logic designed in the file (avoid the obstacle, go towards the light, random walk).
 
-For what concerns the *controller*, I have decided to implement it using a cascade of ifs for managing the *order* of all the different behaviours. The first 'if' has the behaviour with the highest priority, then by going down we execute a behaviour with a lower priority. Here is how It is implemented:
+### Composition of Different behaviours
+Because the system has more behaviours that need to be joined and used together in different moments, I have decided to assign different priorities to all the behaviours:
+1. *Priority Very High*: collision avoidance;
+2. *Priority High*: phototaxi;
+3. *Priority Low*: random walk.
+
+In order to *execute* the behaviour with the highest priority, I have used a cascade of *ifs*. The final result allows the robot to automatically decide what it has to do in a specific moment.
 
 ```lua
 function step()
@@ -32,8 +38,6 @@ end
 ```
 By doing this I am able to alway perform the most *important* task every time, so in this case if there is an object the robot will always try to avoid it, then if there are no objects at all around the robot, it will search for the light and if no light is detected then the robot will start *move randomly* in the area until an obstacle is detected or better if the source of *light* has been detected.
 
-### Composition of Different behaviours
-As it was described inside the design chapter, I have structured the controller logic with a specific structure, where each behaviour has a *priority*. By doing this it was possible have a better *arbitration* of the system. In order to execute the behaviour with the highest priority, I have used a cascade of ifs. The final result allows the robot to automatically decide what it has to do in a specific moment.
 
 ### Obstacle Avoidance
 In order to implement the *obstacle avoidance*, I have used a very simple logic, given all the 24 proximity sensors, I get the value with the *highest score* (it means that I get the closest sensor to an object), then I also save the *angle* of this sensor. By using the *angle*, the robot is able to avoid the obstacle, by going towards the *opposite* direction. The *sense* method of this logic checks if there is an obstacle to avoid, it returns *true* otherwise *false*, then inside the *callback* method there is the actual logic for avoiding the detected obstacle.
