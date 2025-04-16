@@ -1,7 +1,7 @@
 # Phototaxi Task
 The main goal of this task was to develop a robot's behaviour, capable of guiding the robot towards a source of light that it positioned inside the arena. There are no requirements about how fast the robot has to go and what happens if the robot does not detect any light at all. Also there are no requirements in what the robot has to do when it reaches the source of light.
 # Design
-In order to achieve the task goal, I have developed the *phototaxi beahviour* in two different files. The first file, it is called *photo_logic* and contains the entire logic for guiding the robot towards the source of the light, then I have also developed another behaviour which is the *random walk* that is implemented inside the *move_random_logic*. I have decided to add the random walk because I have questioned my self what could happen if the robot does not detect any light at all. It will not move at all, so I have decided to inject the random walking only when the robot does not sense any light at all.
+To effectively achieve the task goal, the phototaxis behavior was implemented across two separate files. The first file, photo_logic.lua, contains the full logic required to guide the robot toward a light source. Additionally, a random walk behavior was implemented in a separate file, move_random_logic.lua. This design decision addresses a key edge case: What happens if the robot does not detect any light? Without an alternative behavior, the robot would remain stationary. To prevent this, the random walk is triggered only when no light is detected and there are no nearby obstacles, allowing the robot to continue exploring the environment until a light source becomes visible.
 
 ![Phototaxi](./images/Pt.png)
 
@@ -11,7 +11,7 @@ The phototaxi task, required the ability from the robot for detecting light in t
 1. *angle*: the angle of the sensor in radian
 2. *value*: the amount of light that the sensor has detected, it is important to say that the range of value is [0, 1].
 
-In order to use the light information from the sensors and guide the robot towards the source of light, I have divided the 24 sensors into 4 different groups, where each group has exactly 6 different sensors:
+In order to use the light information from the sensors and guide the robot towards the source of light, all the sensors were divided into 4 different groups, where each group has exactly 6 different sensors:
 
 ```lua
 DIRECTIONS = {
@@ -73,8 +73,7 @@ end
 ```
 
 # Random Walk
-As I said, it was important to add a logic that allows the robot to walk when there is no light at all, in order to achieve this goal I have deisgned a a random walk that is called only when there is no light around the robot. In order to achieve this goal I wanted to use a simple logic for the generation of this *behaviour*. So in order to stay as as simple as possible and in the meantime achieve the goal of *random walking*, I have used the *footbot random module*. More precisely, I have used the *uniform* method for automatically generate two different values inside the interval [0, 15]. Then both of this two values, where set as the velocities for the two wheels.
-
+As outlined in the design, it is essential to include a behavior that enables the robot to move even when no light is detected. To achieve this, a random walk logic is activated only in the absence of light. This behavior is implemented using the footbot.random module, which provides a uniform method to generate two random values. These values are then assigned to the left and right wheel velocities, allowing the robot to explore the environment in an undirected manner when no stimuli are present.
 ```lua
 function moverandommodule.move(robot)
 	local left_v = robot.random.uniform(0, generalmodule.MAX_VELOCITY)
@@ -82,4 +81,5 @@ function moverandommodule.move(robot)
 	robot.wheels.set_velocity(left_v, right_v)
 end
 ```
+By doing this, it is possible to generate a very basic random walk that can possibly help the robot in finding the light, when it is not able to find any light at all.
 
