@@ -7,7 +7,7 @@ In order to achieve the desired goal of the task, I have divided the two logics 
 2. *avoid_logic*: the content of this file represent the logic for *avoiding* the different obstacles that are present in the arena.
 
 The robot always checks if it is possible to randomly walk, because if the *footbot* detects an obstacle, the first thing that It will try to do will be to avoid It with a logic that will be further described.
-So, in case there are no obstacles in front or around the robot, then the random walk can be executed without worrying about colliding with an obstacle.
+So, in case there are no obstacles in front or around the robot, the random walk can be executed without worrying about colliding with an obstacle.
 
 ### Random walk
 For what concernes the random walking of the robot, the function that has to create this behaviour uses the *footbot random module*. More precisely, the *uniform* method for automatically generate two different values inside the interval [0, 15]. Then both of this two values, are set as velocities for the two wheels.
