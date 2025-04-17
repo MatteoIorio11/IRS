@@ -11,7 +11,7 @@ local high_force = 4
 function attractive.get_vector(robot)
 	local phototaxi_vector = ps.from_sensors(robot.light, 1, 0.0, attractive.module_force) -- phototaxi
 	local random_vector = random.generate_random_vector() -- random walk
-	return vector.vec2_polar_sum(phototaxi_vector, random_vector)
+	return vector.vec2_polar_sum(phototaxi_vector, random_vector) -- sum of the two vectors
 end
 
 -- Module the force that the robot feels using the input distance.
