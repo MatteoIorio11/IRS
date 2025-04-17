@@ -4,7 +4,7 @@ The robot is expected to be able to find a light source and go towards it, while
 ## Design
 The overall design of the system was based on a layered architecture, where each behavior has its own *lua* file:
 1. *avoid_logic*: contains the real logic for avoiding the obstacles;
-2. *halt_logic*: contains the logic for stopping the robot when it is above a black spot;
+2. *halt_logic*: contains the logic for stopping the robot when it is on a black spot;
 3. *photo_logic*: contains the logic for going towards the source of the light;
 4. *move_random_logic*: contains the logic for activate the random walk of the robot.
 
