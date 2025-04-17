@@ -7,6 +7,8 @@ DIRECTIONS = {
 	{ sensors = { 9, 8, 7, 6, 5, 4 } }, -- pi / 2
 }
 
+-- <<Experimental>>
+-- Use as perception schema the max value taken from the different groups among all the sensors.
 function perception.from_sensor_groups(sensors, force)
     local max_val = 0
     local max_angle = 0
@@ -21,6 +23,7 @@ function perception.from_sensor_groups(sensors, force)
 	return {angle=max_angle, length=max_val }
 end
 
+-- <<Experimental>>
 function get_max_from_group(sensors, indexs)
 	local intensity = 0
     local angle = 0
@@ -37,6 +40,10 @@ function get_max_from_group(sensors, indexs)
 	return intensity, angle
 end
 
+-- Use as perception schema the highest value retrieved among all the input sensors. The output vector will have:
+-- vector{angle: A, length: L}
+-- A: angle of the sensor with the highest score
+-- L: a value that it is taken from this formula, f(s_value) = s_value + (s_value + force(s_value))
 function perception.from_sensors(sensors, MAX_VALUE, thr, force)
     local best_angle = 0
     local max_value = 0.0
