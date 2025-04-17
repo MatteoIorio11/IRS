@@ -8,7 +8,7 @@ The entire behaviour of this task, is divided into three different *logics*, eac
 2. *photo_logic*: this file contains the logic for the phototaxi task;
 3. *move_random_logic*: logic for random walking in the arena.
 
-Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, it was necessary to add a *new behaviour* to the robot for walking whene there is no light at all or no objects are *detected*. In this way the robot always tries to seach for the light even when there is no light, this allows the robot to explore the arena.
+Because this assesment has no specifics about what the robot has to do when the robot does not detect any light at all, it was necessary to add a *new behaviour* to the robot for walking when there is no light at all or no objects are *detected*. In this way the robot always tries to seach for the light even when there is no light, this allows the robot to explore the arena.
 
 ![Overall Task](./images/task.png)
 
