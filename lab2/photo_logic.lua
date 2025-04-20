@@ -43,7 +43,6 @@ function detect_light_angle(robot)
 		local pair = DIRECTIONS[i]
 		local intensity, max_light = detect_light_intensity(robot, pair.sensors)
 		if intensity >= brightest_value then
-			log(pair.direction .. " valore: " .. intensity)
 			brightest_value = intensity
 			direction = pair.direction
 			max_local_value = max_light
@@ -76,16 +75,12 @@ function move_robot(robot)
 	general_module.CURRENT_VELOCITY =
 		math.min(math.max(general_module.CURRENT_VELOCITY * factor, 0), general_module.MAX_VELOCITY)
 	if DIRECTION == direction_module.NORTH then
-		log("Dritto")
 		robot.wheels.set_velocity(general_module.CURRENT_VELOCITY, general_module.CURRENT_VELOCITY)
 	elseif DIRECTION == direction_module.SOUTH then
-		log("Indietro")
 		robot.wheels.set_velocity(general_module.CURRENT_VELOCITY, -general_module.CURRENT_VELOCITY)
 	elseif DIRECTION == direction_module.WEST then
-		log("Sinistra")
 		robot.wheels.set_velocity(0, general_module.CURRENT_VELOCITY)
 	else
-		log("Destra")
 		robot.wheels.set_velocity(general_module.CURRENT_VELOCITY, 0)
 	end
 end

@@ -12,7 +12,7 @@ The design of all the different tasks use an Object Oriented philosophy, where e
 1. *sense*: with the using of this method the behaviour searches in the environment and decides if it has something to do (for example avoid an obstacle, going towards the light), this method returns *True* if it is necessary to call its *callback* otherwise it will return *False*.
 2. *callback*: the second API, runs the *real logic* for a specific task, this must be run only if the *sense* method has returned True.
 
-Because one of the requirement of this task was to develop the robot behaviour using the *subsumption architecture*, it was necessary to define all the different priorities over all the different tasks. Among all the possible combinations of behaviours, the chosen stack is this one:
+Because one of the requirements of this task was to develop the robot behaviour using the *subsumption architecture*, it was necessary to define all the different priorities over all the different tasks. Among all the possible combinations of behaviours, the chosen stack was this one:
 1. Avoid Obstacle;
 2. Halt Logic;
 3. PhotoTaxi Logic;
@@ -22,7 +22,7 @@ In order to execute all the behaviours using the correct order of priority, insi
 
 ![stack structure](./images/monotonic_stack.png)
 
-As can be seen from the image, every time that the *sense* method returns false, the controller will automatically check a behaviour with a lower priority. When the *sense* method will return true, the *callback* method will be invoked, it will be executed its logic and then the execution of the exploration of the stack will be *interrupted* by using a *break*, in this way the robot is always able to run the most important task each time.
+As can be seen from the image, every time that the *sense* method returns false, the controller automatically checks a behaviour with a lower priority. When the *sense* method returns true, the *callback* method is invoked, then its main logic will be executed and then the execution of the exploration of the stack will be *interrupted* by using a *break*, in this way the robot is always able to run the most important task when needed. This allows the robot to always choose the best behaviour to use in order to overcome the *sensed* problem.
 
 ```lua
 local photo_logic = require("photo_logic")
