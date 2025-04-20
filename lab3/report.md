@@ -7,15 +7,14 @@ The main goal of this task was to develop the entire logic using *Motor Schemas*
 2. *repulsive*: this type of force is the opposite of the *attractive* one, in this case the robot tends to avoid it by going towards the opposite direction of the force;
 3. *random force*: this is a type of *attractive* force but its source changes every time, in this way there is not a single source of the force, but every time it changes.
 
-The random force, it helps the robot in the situation in which the *attractive* force and *repulsive* force are not strong enough. I have also imagined that every force in the area depends on the distance, in this way I can regulate the amount of force that the robot feels. I have decided to set for the *phototaxi* task the *attractive* force, then for the *obstacle avoidance* the *repulsive* one and finally the *random walking* to the *random force*.
+The random force, it helps the robot in the situation in which the *attractive* force and *repulsive* force are not strong enough. I have also imagined that every force in the area depends on the distance, in this way I can regulate the amount of force that the robot feels. I have decided to set for the *phototaxi* task and the *random walk* the *attractive* force, then for the *obstacle avoidance* the *repulsive* one.
 
 ![all forces](images/forces.png)
 
 In order to keep this image as simple as possible I have avoided the *random force*.
 I have developed three different files, with a single common API, *get_vector*, when this method is called, it returns a vector representing that specific type of force. In order to achieve the final goal I have divided the implementation of all the different behaviours in:
-1. *attractive*: contains the vector with the attractive force;
+1. *attractive*: contains the vectors with the attractive force;
 2. *repulsive*: contains the vector with the repulsive force;
-3. *random_force*: contains the vector with the random force.
 
 ![forces](./images/single_force.png)
 
