@@ -123,9 +123,10 @@ function halt_module.callback(robot)
 end
 ```
 ### Phototaxi
-The third behaviour that is executed by the controller is regarding the *photaxi* task. This behaviour, guides the robot towards a source of light inside the arena. This logic exposes two core apis: *sense* and *callback*.
+The third behaviour that is executed by the controller is the one regarding the *photaxi* task. This behaviour, guides the robot towards a source of light inside the arena. This logic exposes two core apis: *sense* and *callback*.
+![Groups](./images/groups.png)
 #### Sense
-The first core method that is invoked by the controller is *sense*. This method is in charge of detecting the position of the source of light that is inside the arena. In order to detect any light in the arena, the robot uses the *light sensors*. The robot is equipped with 24 different sensors, organized in 4 different groups with 6 sensors each. The arranged layout can be seen from the image ##AGGIUNGIIIII IMMAGINEEEE. The sense method checks each light sensor and if one of the has a value that is greather that a given threshold it will be necessary to make the robot walk towards the source of the light.
+The first core method that is invoked by the controller is *sense*. This method is in charge of detecting the position of the source of light that is inside the arena. In order to detect any light in the arena, the robot uses the *light sensors*. The robot is equipped with 24 different sensors, organized in 4 different groups with 6 sensors each. The arranged layout can be seen from the image above. The sense method adds up the total amount of light detected from each group and takes the direction with the highest score.
 ```lua
 function photo_module.sense(robot)
 	LIGHT = detect_light_angle(robot) -- get the angle and the amount of light detected from sensors.
@@ -155,9 +156,20 @@ function move_robot(robot)
 end
 ```
 ### Random Walk
-The last 
+The last behaviour expected from the Design, is the *random walk*. This behaviour should help the robot in walking inside the arena when there is no light at all. By using this behaviour the robot always tries to reach the goal of walking towards the light and stop over a black spot. Even this behaviour is built using two core methods: *sense* and *callback*.
 #### Sense
+The first core method is the *sense*, as it was possible to understand from the previous behaviours, the *sense* method, has the *activation logic* for the specific behaviour, in this case, this method returns always True, in this way the controller will always invoke the *callback* method.
 #### Callback
+The real logic implementation of this behaviour, is installed inside the *callback* method, this method generates the random walk. The logic used, involves the robot's ability to generate random values, to be more precise, the callback generates two different values that will be used for the left and right velocity of the robot.
+
+```lua
+function moverandommodule.callback(robot)
+	log("robot: Priority over move random task")
+	local left_v = robot.random.uniform(0, generalmodule.MAX_VELOCITY)
+	local right_v = robot.random.uniform(0, generalmodule.MAX_VELOCITY)
+	robot.wheels.set_velocity(left_v, right_v)
+end
+```
 
 ### Observations: Behavioural Tree
 This layered architecture really resemble a *behavioural tree*, because the controller executes the real behaviour of a node only when its status is true (in this case it means that the node has to do something), then the controller execute the code inside the node (by calling the *callback* method) and it will return. Instead if the *sense* method, which contains the *activation condition*, returns false the *controller* will step on the next most important behaviour to check and possibly execute it. By using this type of architecture I have noticed that the code is really well separated, and the fact of splitting the activation condition and the execution code in two different methods linked to a single behaviour really helps in to creating long chains of more complex mechanism in which a signle behaviour can be composed by multiple simple behaviours and so on (by following the *Divide et Conquer* method).
