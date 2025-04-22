@@ -2,7 +2,7 @@
 The goal of this exercise was to develop an *Aggregation Beheaviour*. Where a robot can be in two different states depending on specific conditions. The robot can be stopped and it can start moving by using a specific probability (Pw), and also if the robot is walking it can stop by using another probability (Ps). While the robot is walking it also has to *avoid* all the other robots nearby, and when there are not any other robots around it has to randomly walk in the arena. The probability of the robot to going from the status of *WALKING* to *STOPPED* depends on how many robots are stopped around a specifc arean from the robot, and the probability of the robot for going from *STOPPED* to *WALKING* depends on the number of robots that are currently walking around the current robot.
 
 ## Design
-This excercise has a focus specifically on the *swarm robotic topic*. The robot's design was divided into different specifics. And all this specifics has the main goal of creating clusters of stopped robots. The first necessary thing to do was to create the Robot's State Machine:
+This excercise has a focus specifically on the *swarm robotic topic*. The robot's design was divided into different specifics. And all the specifics have the main goal of creating clusters of stopped robots. The first necessary thing to do was to create the Robot's State Machine:
 
 ![state machine](./images/state_machine.png)
 
@@ -10,7 +10,7 @@ There are two main states:
 1. *Stopped*: this is the state where the robot does not move at all;
 2. *Walking*: in this state the robot walks randomly inside the arena. while it tries to avoid all the other robots.
 
-As can be seen from the image, when the robot is inside the *WALKING* state, it has to always avoid objects if detected, otherwise it randomly walk, it is important to say that every time the robot can fall in the *STOPPED* status. In order to achieve this behaviour, inside the step method the robot gets the probability for changing its state, if the robot can change then it will transition into the newer state.
+As can be seen from the image, when the robot is inside the *WALKING* state, it has to always avoid objects if detected, otherwise it *randomly walk*, it is important to say that every time the robot can fall in the *STOPPED* status. In order to achieve this behaviour, inside the step method the robot gets the probability for changing its state, if the robot can change then it will transition into the *newer state*.
 
 ```lua
 function step()
@@ -35,7 +35,7 @@ In this way the robot can transitate in another state using a probability, both 
 2. *PW*: is the probability used by the robot for switching from *Stopped* to *Walking*.
 
 ### Design Signaling
-As the task said, the robot must be able to communicate with its neighbours using the *range* and *bearing* technology. If the robot stops, then it will set the bit number 1 (the *channel*) to one, otherwise it will set the bit channel to zero, this means that the robot starts walking in the arena. This signaling logic *helps* the robot at generating the probabilities for possibly change its state.
+As the task said, the robot must be able to communicate with its neighbours using the *range* and *bearing* technology. If the robot stops, then it will set the bit number 1 (the *channel*) to one, otherwise it will set the bit channel to zero (this means that the robot has started walking in the arena). The signaling logic *helps* the robot in generating the probabilities for possibly change its state.
 
 ![signaling](./images/signaling.png)
 
