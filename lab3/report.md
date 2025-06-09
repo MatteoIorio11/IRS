@@ -16,7 +16,7 @@ The concept behind the *module_force* function is inspired by electromagnetic fi
 
 According to electromagnetic theory, a particle *accelerates* based on its distance from the source of a magnetic field (and other parameters that in this case are not used). This phenomenon is approximated through the *module_force* function. The formulas used in this implementation are deliberately kept simple to ensure the behavior remains observable and that the robot can more easily reach its goal. However, future experiments could benefit from incorporating more sophisticated models, such as force modulation based on Lorentz forces.
 
-![force's mod](images/mod.png)
+![force's mod](images/Mod.png)
 
 ### Vectors
 As it was described inside the *Design* chapter, there are two type of forces that are distributed like so:
