@@ -11,7 +11,7 @@ Because in the task description, there is nothing about what the robot has to do
 ### Magnitude of Forces
 When a problem is modeled using a *motor schema architecture*, it is necessary to conceptualize the robot as a *particle* that experiences various types of forces acting upon it. In this experiment, the magnitude of each force-dependent on the distance from its source was also taken into account.
 
-#### General idea for moduling the forces (IMPROVE)
+#### General idea for moduling the forces
 The concept behind the *module_force* function is inspired by electromagnetic field and particle theory. In this framework, the robot is envisioned as a *particle* possessing a specific *polarity*, while each force in the environment is treated as generating an electromagnetic field. If a force is *attractive*, it is considered to have a *polarity opposite* to that of the robot; conversely, if the force is *repulsive*, it shares the *same polarity*.
 
 According to electromagnetic theory, a particle *accelerates* based on its distance from the source of a magnetic field (and other parameters that in this case are not used). This phenomenon is approximated through the *module_force* function. The formulas used in this implementation are deliberately kept simple to ensure the behavior remains observable and that the robot can more easily reach its goal. However, future experiments could benefit from incorporating more sophisticated models, such as force modulation based on Lorentz forces.
